@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import Courses from './pages/Courses';
 import CourseDetail from './pages/CourseDetail';
 import ValuePacks from './pages/ValuePacks';
+import ValuePackDetail from './pages/ValuePackDetail';
 import Checkout from './pages/Checkout';
 import StudentDashboard from './pages/StudentDashboard';
 import CoursePlayer from './pages/CoursePlayer';
@@ -16,6 +17,7 @@ import AboutFounder from './pages/AboutFounder';
 import FAQPage from './pages/FAQPage';
 import AdminDashboard from './pages/AdminDashboard';
 import AuthPage from './pages/AuthPage';
+import EnrollmentConfirmation from './pages/EnrollmentConfirmation';
 
 // Error Boundary — catches React runtime crashes and shows the error on screen
 class ErrorBoundary extends React.Component {
@@ -82,7 +84,9 @@ function Layout() {
           <Route path="/courses" element={<Courses />} />
           <Route path="/course/:id" element={<CourseDetail />} />
           <Route path="/value-packs" element={<ValuePacks />} />
+          <Route path="/value-pack/:id" element={<ValuePackDetail />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/enrollment-confirmation" element={<EnrollmentConfirmation />} />
           <Route path="/dashboard" element={<StudentDashboard />} />
           <Route path="/player/:id" element={<CoursePlayer />} />
           <Route path="/verify-certificate" element={<CertificateVerify />} />

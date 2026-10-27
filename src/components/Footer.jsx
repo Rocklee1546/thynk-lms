@@ -1,47 +1,48 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, Mail, Phone, MapPin, Award, CheckCircle, Heart, Globe } from 'lucide-react';
+import ThynkLogo from './ThynkLogo';
 
 export default function Footer() {
   return (
     <footer className="bg-brand-navy text-slate-300 border-t border-slate-800">
-      {/* Top Value Bar */}
-      <div className="border-b border-slate-800 py-8 bg-slate-950/40">
+      {/* Top Value Bar — Vibrant Lighter Blue Gradient with Colorful Feature Icons */}
+      <div className="border-b border-blue-900/60 py-8 bg-gradient-to-r from-[#0D2B52] via-[#1E40AF] to-[#2563EB] text-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-6">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-electric-600/20 text-electric-500 border border-electric-500/30 flex items-center justify-center shrink-0">
-              <CheckCircle className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-xl bg-sky-400/20 text-sky-200 border border-sky-300/40 flex items-center justify-center shrink-0 shadow-sm">
+              <CheckCircle className="w-5 h-5 text-sky-300" />
             </div>
             <div>
               <h4 className="font-bold text-white text-sm">100% Practical</h4>
-              <p className="text-xs text-slate-400">Real client case studies</p>
+              <p className="text-xs text-sky-100/90">Real client case studies</p>
             </div>
           </div>
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0">
-              <Globe className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-xl bg-emerald-400/20 text-emerald-200 border border-emerald-300/40 flex items-center justify-center shrink-0 shadow-sm">
+              <Globe className="w-5 h-5 text-emerald-300" />
             </div>
             <div>
               <h4 className="font-bold text-white text-sm">Tamil</h4>
-              <p className="text-xs text-slate-400">Clear native explanations</p>
+              <p className="text-xs text-sky-100/90">Clear native explanations</p>
             </div>
           </div>
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-600/20 text-amber-400 border border-amber-500/30 flex items-center justify-center shrink-0">
-              <Award className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-xl bg-amber-400/25 text-amber-200 border border-amber-300/40 flex items-center justify-center shrink-0 shadow-sm">
+              <Award className="w-5 h-5 text-amber-300" />
             </div>
             <div>
               <h4 className="font-bold text-white text-sm">Verified Certificate</h4>
-              <p className="text-xs text-slate-400">Shareable online link</p>
+              <p className="text-xs text-sky-100/90">Shareable online link</p>
             </div>
           </div>
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-purple-600/20 text-sky-400 border border-sky-500/30 flex items-center justify-center shrink-0">
-              <Shield className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-xl bg-purple-400/25 text-purple-200 border border-purple-300/40 flex items-center justify-center shrink-0 shadow-sm">
+              <Shield className="w-5 h-5 text-purple-200" />
             </div>
             <div>
               <h4 className="font-bold text-white text-sm">Affordable Pricing</h4>
-              <p className="text-xs text-slate-400">Designed for students</p>
+              <p className="text-xs text-sky-100/90">Designed for students</p>
             </div>
           </div>
         </div>
@@ -50,14 +51,8 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-5 gap-8">
         {/* Brand Info */}
         <div className="md:col-span-2 space-y-4">
-          <Link to="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-electric-600 flex items-center justify-center font-black text-xl text-white">
-              T
-            </div>
-            <div>
-              <span className="font-extrabold text-xl tracking-tight text-white">THYNK LMS</span>
-              <p className="text-[11px] text-slate-400 font-semibold tracking-wider uppercase">THYNK DIGITAL SOLUTIONS</p>
-            </div>
+          <Link to="/" className="inline-block">
+            <ThynkLogo className="h-9 w-auto" />
           </Link>
           <p className="text-xs text-slate-400 leading-relaxed pr-4">
             THYNK LMS is a career-focused EdTech platform empowering Tamil Nadu and South Indian students with practical, high-income digital skills at student-friendly affordable prices.

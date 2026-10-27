@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLMS } from '../context/LMSContext';
 import { changeUserPassword, logoutAllDevices } from '../services/authService';
 import { getCommunicationConsent, updateCommunicationConsent } from '../services/reminderService';
+import { getUserEnrollmentRequests } from '../services/enrollmentService';
 import { 
   BookOpen, 
   PlayCircle, 
@@ -54,6 +55,19 @@ export default function StudentDashboard() {
   const [commPrefs, setCommPrefs] = useState(initialConsent);
   const [prefsSaved, setPrefsSaved] = useState(false);
 
+  // User Enrollment Requests (Manual UPI) — placed before early return to comply with Rules of Hooks
+  const userRequests = useMemo(() => {
+    return currentUser ? getUserEnrollmentRequests(currentUser.id) : [];
+  }, [currentUser, activeTab]);
+
+  const pendingRequests = useMemo(() => {
+    return userRequests.filter(r => r.status === 'pending_verification');
+  }, [userRequests]);
+
+  const rejectedRequests = useMemo(() => {
+    return userRequests.filter(r => r.status === 'rejected');
+  }, [userRequests]);
+
   if (!currentUser) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
@@ -62,10 +76,10 @@ export default function StudentDashboard() {
           <h2 className="font-extrabold text-slate-900 text-xl">Please Login to Access Student LMS</h2>
           <p className="text-xs text-slate-500">Sign in with your student account to view enrolled courses, progress & certificates.</p>
           <button
-            onClick={() => openAuthModal('/dashboard', 'signin')}
-            className="bg-electric-600 text-white font-bold text-xs px-6 py-3 rounded-xl shadow-md"
+            onClick={() => openAuthModal('/dashboard', 'signup')}
+            className="bg-electric-600 hover:bg-electric-700 text-white font-extrabold text-xs px-6 py-3 rounded-xl shadow-md cursor-pointer"
           >
-            Sign In with OTP / Password
+            Sign Up / Log In to Access Dashboard
           </button>
         </div>
       </div>
@@ -73,7 +87,7 @@ export default function StudentDashboard() {
   }
 
   // Get enrolled courses objects
-  const enrolledCourses = courses.filter(c => currentUser.enrolledCourseIds?.includes(c.id));
+  const enrolledCourses = courses.filter(c => currentUser.enrolledCourseIds?.includes(c.id) || checkCourseAccess(c.id).hasAccess);
 
   // Compute progress stats
   const computeCourseProgress = (courseId) => {
@@ -234,7 +248,82 @@ export default function StudentDashboard() {
         {/* TAB 1: MY COURSES */}
         {activeTab === 'courses' && (
           <div className="space-y-6">
-            <h2 className="text-xl font-extrabold text-slate-900">Enrolled Programs & 6-Month Validity</h2>
+            <h2 className="text-xl font-extrabold text-slate-900">Enrolled Programs &amp; 6-Month Validity</h2>
+
+            {/* Pending Verification Requests Section */}
+            {pendingRequests.length > 0 && (
+              <div className="space-y-3">
+                <div className="flex items-center space-x-2 text-amber-800">
+                  <Clock className="w-5 h-5 text-amber-600 animate-pulse" />
+                  <h3 className="text-sm font-extrabold uppercase tracking-wider">
+                    Pending Verification ({pendingRequests.length})
+                  </h3>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {pendingRequests.map(req => (
+                    <div key={req.refId} className="bg-amber-50/90 border border-amber-200 rounded-3xl p-5 space-y-3 shadow-xs">
+                      <div className="flex items-start justify-between">
+                        <div className="space-y-1">
+                          <span className="font-mono font-black text-xs bg-amber-200/80 text-amber-900 px-2 py-0.5 rounded-md">
+                            {req.refId}
+                          </span>
+                          <h4 className="font-extrabold text-slate-900 text-sm mt-1">{req.itemName}</h4>
+                          <p className="text-xs text-amber-900/80 font-medium">
+                            Manual UPI Payment • ₹{Number(req.amount).toLocaleString()}
+                          </p>
+                        </div>
+                        <span className="bg-amber-200 text-amber-900 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">
+                          Under Review
+                        </span>
+                      </div>
+
+                      <p className="text-xs text-amber-800 leading-relaxed bg-white/70 p-3 rounded-xl border border-amber-200/60 font-medium">
+                        Your UPI payment screenshot is currently under review by our admin team. Course access will unlock as soon as verified (typically 2-3 hours during working hours).
+                      </p>
+
+                      <div className="flex items-center justify-between pt-1">
+                        <span className="text-[11px] text-amber-700 font-medium">
+                          Submitted on {new Date(req.submittedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                        </span>
+                        <Link
+                          to={`/enrollment-confirmation?ref=${req.refId}`}
+                          className="text-xs font-extrabold text-electric-600 hover:text-electric-700 underline"
+                        >
+                          View Status &amp; Details →
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Rejected Requests Alert */}
+            {rejectedRequests.length > 0 && (
+              <div className="space-y-3">
+                {rejectedRequests.map(req => (
+                  <div key={req.refId} className="bg-rose-50 border border-rose-200 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                    <div>
+                      <p className="font-bold text-rose-900">
+                        Enrollment request for {req.itemName} was not approved ({req.refId})
+                      </p>
+                      {req.rejectionReason && (
+                        <p className="text-rose-700 mt-0.5">Reason: {req.rejectionReason}</p>
+                      )}
+                    </div>
+                    <a
+                      href="https://wa.me/918098791513"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-rose-600 hover:bg-rose-700 text-white font-bold px-3 py-1.5 rounded-lg shrink-0 text-center"
+                    >
+                      Contact WhatsApp Support
+                    </a>
+                  </div>
+                ))}
+              </div>
+            )}
             
             {enrolledCourses.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

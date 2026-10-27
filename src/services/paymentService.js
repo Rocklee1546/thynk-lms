@@ -61,6 +61,70 @@ export const saveEnrollments = (enrollments) => {
   localStorage.setItem(ENROLLMENTS_DB_KEY, JSON.stringify(enrollments));
 };
 
+// Create a new UPI QR Order with 5-minute expiration
+export const createUPIOrder = async ({
+  userId,
+  itemId,
+  itemType,
+  amount,
+  couponCode = null,
+  discountAmount = 0,
+  title = '',
+  billingAddress = null,
+  studentInfo = null
+}) => {
+  if (!userId || !itemId || !amount) {
+    return { success: false, error: 'Missing required order parameters.' };
+  }
+
+  const orderId = `ORD-THYNK-${Date.now()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+  const expiresAtMs = Date.now() + 5 * 60 * 1000; // 5 Minutes Expiration
+  const upiId = 'thynkdigital@upi';
+  const upiString = `upi://pay?pa=${upiId}&pn=THYNK%20Digital%20Academy&am=${amount}&cu=INR&tn=${encodeURIComponent('Order ' + orderId)}`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiString)}`;
+
+  const orderRecord = {
+    id: orderId,
+    orderId,
+    userId,
+    itemId,
+    itemType, // 'course' or 'value_pack'
+    title,
+    amount,
+    currency: 'INR',
+    status: 'pending',
+    couponCode,
+    discountAmount,
+    upiId,
+    upiString,
+    qrUrl,
+    billingAddress,
+    studentInfo,
+    createdAt: new Date().toISOString(),
+    expiresAtMs
+  };
+
+  try {
+    const orders = JSON.parse(localStorage.getItem(ORDERS_DB_KEY) || '[]');
+    orders.push(orderRecord);
+    localStorage.setItem(ORDERS_DB_KEY, JSON.stringify(orders));
+
+    logAuditEvent('upi_order_created', {
+      actorId: userId,
+      entityType: 'order',
+      entityId: orderId,
+      metadata: { itemId, amount, itemType, expiresAtMs, billingAddress, studentInfo }
+    });
+
+    return {
+      success: true,
+      order: orderRecord
+    };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+};
+
 // Create a new Razorpay Order (Simulates Server-side order generation)
 export const createRazorpayOrder = async ({ userId, itemId, itemType, amount, couponCode = null, discountAmount = 0 }) => {
   if (!userId || !itemId || !amount) {
@@ -117,6 +181,18 @@ export const verifyAndCompletePayment = async ({
     return { success: false, error: 'Incomplete payment verification payload.' };
   }
 
+  // Fetch orders once and reuse throughout
+  const orders = JSON.parse(localStorage.getItem(ORDERS_DB_KEY) || '[]');
+
+  // Check order session expiration
+  const order = orders.find(o => o.id === orderId || o.orderId === orderId);
+  if (order && order.expiresAtMs && Date.now() > order.expiresAtMs) {
+    return {
+      success: false,
+      error: 'This QR code has expired. Click Pay Now to generate a new one.'
+    };
+  }
+
   // 1. Idempotency Check: Prevent duplicate processing if callback or webhook arrives twice
   const processedPayments = JSON.parse(localStorage.getItem(PROCESSED_PAYMENT_IDS_KEY) || '[]');
   if (processedPayments.includes(paymentId)) {
@@ -133,7 +209,6 @@ export const verifyAndCompletePayment = async ({
   localStorage.setItem(PROCESSED_PAYMENT_IDS_KEY, JSON.stringify(processedPayments));
 
   // 3. Update order status to 'paid'
-  const orders = JSON.parse(localStorage.getItem(ORDERS_DB_KEY) || '[]');
   const orderIndex = orders.findIndex(o => o.id === orderId);
   if (orderIndex >= 0) {
     orders[orderIndex].status = 'paid';

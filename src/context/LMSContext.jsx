@@ -41,6 +41,24 @@ const initialSeed = {
       description: 'Master SEO, Google Ads, Meta Ads & WordPress in Tamil. Practical hands-on training built specifically for Tamil Nadu students seeking real career skills.',
       shortDesc: 'Complete 4-in-1 career program in Tamil covering SEO, Google Ads, Meta Ads & WordPress.',
       includes: ['SEO', 'Google Ads', 'Meta Ads', 'WordPress'],
+      requirements: [
+        'Basic understanding of how the internet works',
+        'A smartphone or laptop with stable internet connection',
+        'No prior digital marketing experience required — we start from zero',
+        'Willingness to practice with real tools during the course',
+        'Basic computer literacy (browsing, typing, email)'
+      ],
+      fullDescription: `The Digital Marketing Complete Career Program is THYNK Digital Academy's flagship course — a comprehensive, Tamil-language deep-dive into the four most in-demand digital marketing disciplines.\n\nThis is not a theory-only course. Every module is built around real client case studies, live tool demonstrations, and step-by-step Tamil explanations that make complex concepts easy to apply immediately.\n\nYou will master Search Engine Optimization (SEO) — understanding how Google ranks websites, conducting keyword research, optimising on-page content, fixing technical issues, and building authority through backlinks. You will then progress into Google Ads, learning how to set up profitable search campaigns, write high-converting ad copies, and optimise bidding to minimise cost-per-lead.\n\nThe Meta Ads module covers the complete Facebook and Instagram advertising ecosystem — from Business Manager setup and Pixel installation to audience targeting, retargeting funnels, Reel ad creatives, and scaling profitable campaigns. Finally, you will build real business websites from scratch using WordPress and Elementor — no coding required.\n\nThrough the internship eligibility pathway, top performers who complete all projects and lessons gain access to practical internship opportunities with THYNK's industry network, giving you portfolio-ready work experience before you even graduate.\n\nAll content is taught in crystal-clear Tamil with professional-quality screen recordings, making this the most accessible advanced digital marketing program available for Tamil Nadu students today.`,
+      instructor: {
+        name: 'Sriram — THYNK Digital',
+        title: 'Lead Mentor & Founder, THYNK Digital Academy',
+        photo: '/founder.png',
+        rating: 4.9,
+        reviewCount: 1099,
+        studentCount: 1400,
+        courseCount: 5,
+        bio: `Sriram is the founder of THYNK Digital Solutions and the lead instructor at THYNK Digital Academy. With hands-on experience running paid campaigns, SEO strategies, and WordPress builds for real South Indian businesses, Sriram created this academy to bridge the gap between expensive institute training and quality affordable education for Tamil students.\n\nHis teaching philosophy is built on one idea: practical skill first, theory second. Every lesson reflects real agency work — the same strategies used for actual client campaigns are taught step by step in Tamil, so students can apply and earn from day one.\n\nSriram has personally mentored 1,400+ students across Tamil Nadu, helping them land freelance clients, agency jobs, and internship opportunities. His no-nonsense, structured teaching style makes complex marketing concepts accessible to beginners with no prior experience.`
+      },
       learningBenefits: [
         '100% Recorded Tamil Video Sessions with 6-Month Structured Access',
         'Weekly Live Doubt Solving Sessions with Industry Experts',
@@ -125,6 +143,23 @@ const initialSeed = {
       description: 'Learn Keyword Research, On-Page SEO, Technical Audits and Backlink building step-by-step in clear Tamil.',
       shortDesc: 'Complete Search Engine Optimization course in Tamil.',
       includes: ['SEO Fundamentals', 'Keyword Research', 'On-Page SEO', 'Technical Audits'],
+      requirements: [
+        'Basic familiarity with using Google Search',
+        'A laptop or desktop computer with internet access',
+        'No prior SEO or marketing knowledge required',
+        'Curiosity and willingness to practice on a real website or blog'
+      ],
+      fullDescription: `SEO Mastery is a complete, practical course designed for Tamil students and business owners who want to rank their websites on Google without paying for ads.\n\nYou will start from the very basics — understanding how search engines crawl, index, and rank pages — and progressively move into advanced keyword research strategies using free and paid tools. Every technique is demonstrated with a live Tamil website case study, so you see exactly what to do at every step.\n\nThe On-Page SEO module covers title tags, meta descriptions, header structures, internal linking, and content optimisation frameworks that Google rewards. The Technical SEO section addresses site speed, mobile usability, schema markup, XML sitemaps, and crawl error fixes.\n\nThe final section covers Off-Page SEO and backlink acquisition — how to build genuine authority for your website through guest posts, citations, and digital PR techniques that work in the Indian market.\n\nBy the end of this course, you will be able to audit any website's SEO health, build an optimisation plan, implement it yourself, and track ranking improvements in Google Search Console — a skill you can monetise immediately as a freelancer or agency professional.`,
+      instructor: {
+        name: 'Sriram — THYNK Digital',
+        title: 'Lead Mentor & Founder, THYNK Digital Academy',
+        photo: '/founder.png',
+        rating: 4.9,
+        reviewCount: 1099,
+        studentCount: 1400,
+        courseCount: 5,
+        bio: `Sriram is the founder of THYNK Digital Solutions and the lead instructor at THYNK Digital Academy. With hands-on experience running paid campaigns, SEO strategies, and WordPress builds for real South Indian businesses, Sriram created this academy to bridge the gap between expensive institute training and quality affordable education for Tamil students.\n\nHis teaching philosophy is built on one idea: practical skill first, theory second. Every lesson reflects real agency work — the same strategies used for actual client campaigns are taught step by step in Tamil, so students can apply and earn from day one.\n\nSriram has personally mentored 1,400+ students across Tamil Nadu, helping them land freelance clients, agency jobs, and internship opportunities. His no-nonsense, structured teaching style makes complex marketing concepts accessible to beginners with no prior experience.`
+      },
       learningBenefits: [
         'Recorded Tamil Lessons',
         'Live Doubt Support',
@@ -161,6 +196,24 @@ const initialSeed = {
       description: 'Create high-converting Search Ads, Display Campaigns and YouTube video ads with profitable bidding techniques.',
       shortDesc: 'Master Google Search & Display Ads campaigns in Tamil.',
       includes: ['Search Ads', 'Display Ads', 'Bidding Strategies', 'Conversion Tracking'],
+      requirements: [
+        'Basic understanding of how websites and online business work',
+        'A Google account (Gmail) to create Google Ads account',
+        'No prior advertising experience needed — we start from basics',
+        'Laptop or desktop with a stable internet connection',
+        'Some budget curiosity (even ₹500 practice budget is enough)'
+      ],
+      fullDescription: `Google Ads & PPC Campaign Specialist is the most in-depth Tamil-language Google Ads training available, built for students who want to run profitable paid search and display campaigns for local businesses, e-commerce brands, and freelance clients.\n\nYou will begin by understanding how Google's advertising auction works — why some ads show above others, how Quality Score is calculated, and what separates profitable campaigns from money-burning ones. Then you'll set up your own Google Ads account and run your first Search campaign step by step.\n\nThe Search Ads module covers everything: keyword match types, ad group structure, high-converting headline formulas, description line strategy, and ad extensions that improve click-through rates. You will learn to use the Google Ads Keyword Planner for real budget estimations before spending any money.\n\nBidding strategy is covered in depth — manual CPC, Target CPA, Target ROAS, and Maximize Conversions — so you understand exactly when to use each approach depending on campaign maturity and business goals.\n\nDisplay and YouTube Ads are covered with audience targeting, in-stream ad best practices, and remarketing campaign setup. Conversion Tracking is set up end-to-end so you always know your true cost per lead and return on ad spend.\n\nThis course ends with a complete campaign audit exercise using a real client account structure — giving you a portfolio piece you can show to potential employers or clients.`,
+      instructor: {
+        name: 'Sriram — THYNK Digital',
+        title: 'Lead Mentor & Founder, THYNK Digital Academy',
+        photo: '/founder.png',
+        rating: 4.9,
+        reviewCount: 1099,
+        studentCount: 1400,
+        courseCount: 5,
+        bio: `Sriram is the founder of THYNK Digital Solutions and the lead instructor at THYNK Digital Academy. With hands-on experience running paid campaigns, SEO strategies, and WordPress builds for real South Indian businesses, Sriram created this academy to bridge the gap between expensive institute training and quality affordable education for Tamil students.\n\nHis teaching philosophy is built on one idea: practical skill first, theory second. Every lesson reflects real agency work — the same strategies used for actual client campaigns are taught step by step in Tamil, so students can apply and earn from day one.\n\nSriram has personally mentored 1,400+ students across Tamil Nadu, helping them land freelance clients, agency jobs, and internship opportunities. His no-nonsense, structured teaching style makes complex marketing concepts accessible to beginners with no prior experience.`
+      },
       learningBenefits: [
         'Hands-on Ad Budget Simulation',
         'Live Doubt Session Access',
@@ -196,6 +249,23 @@ const initialSeed = {
       description: 'Scale e-commerce brands and lead generation campaigns on Instagram & Facebook with targeting frameworks.',
       shortDesc: 'Complete Facebook & Instagram Ads training in Tamil.',
       includes: ['Meta Pixel', 'Audience Targeting', 'Reel Ads', 'Retargeting'],
+      requirements: [
+        'A Facebook account and basic familiarity with Facebook or Instagram',
+        'Laptop with internet access (mobile phone alone is not sufficient)',
+        'No prior paid advertising experience required',
+        'Business mindset — you should have something to promote (real or practice)'
+      ],
+      fullDescription: `Meta Ads Blueprint is a complete Tamil-language training program for running profitable Facebook and Instagram ad campaigns — the most widely used paid social platform for Indian businesses, freelancers, and e-commerce brands.\n\nThe course begins with Meta Business Suite setup, Ad Account configuration, and the critical Meta Pixel installation process — a step many beginners get wrong, which causes tracking failures and wasted ad spend. You will install the Pixel correctly and verify it is firing on the right events.\n\nAudience targeting is the heart of this course. You will learn how to build Custom Audiences from website visitors, video watchers, and customer lists — and use them to create Lookalike Audiences that find new customers who behave exactly like your best existing customers.\n\nAd creative strategy is covered in depth: how to design Reel ads, carousel posts, and lead generation forms that convert. You will understand the difference between Awareness, Traffic, Engagement, Lead Generation, and Conversion campaign objectives — and when to use each.\n\nThe retargeting module shows you how to re-engage visitors who viewed your product but did not purchase — a technique that dramatically reduces cost-per-acquisition for e-commerce and service businesses. Campaign scaling strategies using CBO (Campaign Budget Optimisation) and A/B testing frameworks are covered in the final section.`,
+      instructor: {
+        name: 'Sriram — THYNK Digital',
+        title: 'Lead Mentor & Founder, THYNK Digital Academy',
+        photo: '/founder.png',
+        rating: 4.9,
+        reviewCount: 1099,
+        studentCount: 1400,
+        courseCount: 5,
+        bio: `Sriram is the founder of THYNK Digital Solutions and the lead instructor at THYNK Digital Academy. With hands-on experience running paid campaigns, SEO strategies, and WordPress builds for real South Indian businesses, Sriram created this academy to bridge the gap between expensive institute training and quality affordable education for Tamil students.\n\nHis teaching philosophy is built on one idea: practical skill first, theory second. Every lesson reflects real agency work — the same strategies used for actual client campaigns are taught step by step in Tamil, so students can apply and earn from day one.\n\nSriram has personally mentored 1,400+ students across Tamil Nadu, helping them land freelance clients, agency jobs, and internship opportunities. His no-nonsense, structured teaching style makes complex marketing concepts accessible to beginners with no prior experience.`
+      },
       learningBenefits: [
         'Tamil Practical Tutorials',
         'Live Doubt Resolution',
@@ -231,6 +301,23 @@ const initialSeed = {
       description: 'Build professional responsive business websites and landing pages using WordPress & Elementor without writing code.',
       shortDesc: 'No-code WordPress website creation in Tamil.',
       includes: ['Elementor', 'Domain & Hosting', 'Plugins', 'Security'],
+      requirements: [
+        'No coding knowledge required — this course is 100% no-code',
+        'A laptop or desktop computer (Windows or Mac)',
+        'Ability to purchase a domain and hosting (approx ₹2,000–3,000/year, not included)',
+        'Desire to build a real website for yourself, a client, or a business'
+      ],
+      fullDescription: `WordPress Website Builder & Growth is the perfect starting point for anyone who wants to build professional, fast, and mobile-responsive business websites without touching a single line of code.\n\nThis course is built specifically for Tamil Nadu students, freelancers, and small business owners who want to create their own websites or offer website development as a service. You will start with domain registration and hosting setup — understanding how to choose the right hosting plan for different types of websites.\n\nWordPress installation, theme selection, and the core dashboard are covered step by step. You will then learn Elementor — the most popular drag-and-drop website builder — to design beautiful pages, landing pages, contact forms, and service sections without any design or coding background.\n\nEssential plugins for SEO, security, speed optimisation, and spam protection are installed and configured during the course. You will understand which plugins to use and which ones to avoid (plugin bloat is a common beginner mistake that slows websites down).\n\nThe course culminates in a complete client website build exercise — you will design, build, and launch a fully functional 5-page business website from scratch. This becomes a real portfolio piece you can show to potential clients or employers immediately after completing the course.`,
+      instructor: {
+        name: 'Sriram — THYNK Digital',
+        title: 'Lead Mentor & Founder, THYNK Digital Academy',
+        photo: '/founder.png',
+        rating: 4.9,
+        reviewCount: 1099,
+        studentCount: 1400,
+        courseCount: 5,
+        bio: `Sriram is the founder of THYNK Digital Solutions and the lead instructor at THYNK Digital Academy. With hands-on experience running paid campaigns, SEO strategies, and WordPress builds for real South Indian businesses, Sriram created this academy to bridge the gap between expensive institute training and quality affordable education for Tamil students.\n\nHis teaching philosophy is built on one idea: practical skill first, theory second. Every lesson reflects real agency work — the same strategies used for actual client campaigns are taught step by step in Tamil, so students can apply and earn from day one.\n\nSriram has personally mentored 1,400+ students across Tamil Nadu, helping them land freelance clients, agency jobs, and internship opportunities. His no-nonsense, structured teaching style makes complex marketing concepts accessible to beginners with no prior experience.`
+      },
       learningBenefits: [
         'Build Your Own Website',
         'Recorded Tamil Content',
@@ -444,9 +531,54 @@ const initialSeed = {
     }
   ],
   coupons: [
-    { code: 'THYNK10', discountType: 'percentage', discountValue: 10, isActive: true, description: '10% instant discount' },
-    { code: 'STUDENT500', discountType: 'fixed', discountValue: 500, isActive: true, description: 'Flat ₹500 OFF on Career Program' },
-    { code: 'EARLYBIRD', discountType: 'percentage', discountValue: 15, isActive: true, description: '15% Early Bird discount' }
+    {
+      id: 'coup-101',
+      code: 'THYNK10',
+      description: '10% instant discount on all courses & value packs',
+      discountType: 'percentage',
+      discountValue: 10,
+      startDate: '2026-01-01',
+      expiryDate: '2027-12-31',
+      usageLimit: 500,
+      usedCount: 42,
+      minPurchaseAmount: 500,
+      applicableItemId: 'all',
+      isActive: true,
+      isVisible: true,
+      createdAt: '2026-01-01T00:00:00.000Z'
+    },
+    {
+      id: 'coup-102',
+      code: 'STUDENT500',
+      description: 'Flat ₹500 OFF on Career Program & Value Packs',
+      discountType: 'fixed',
+      discountValue: 500,
+      startDate: '2026-01-01',
+      expiryDate: '2027-12-31',
+      usageLimit: 200,
+      usedCount: 18,
+      minPurchaseAmount: 1000,
+      applicableItemId: 'all',
+      isActive: true,
+      isVisible: true,
+      createdAt: '2026-01-01T00:00:00.000Z'
+    },
+    {
+      id: 'coup-103',
+      code: 'EARLYBIRD',
+      description: '15% Early Bird discount for new enrollments',
+      discountType: 'percentage',
+      discountValue: 15,
+      startDate: '2026-01-01',
+      expiryDate: '2027-12-31',
+      usageLimit: 100,
+      usedCount: 5,
+      minPurchaseAmount: 1499,
+      applicableItemId: 'all',
+      isActive: true,
+      isVisible: true,
+      createdAt: '2026-01-01T00:00:00.000Z'
+    }
   ],
   certificates: [
     {
@@ -526,6 +658,92 @@ const initialSeed = {
       totalLessonsCount: 12,
       submittedProjects: ['Pixel & Custom Audience Draft']
     }
+  ],
+  reviews: [
+    {
+      id: 'rev-101',
+      courseId: 'dm-career-pack',
+      studentId: 'std-102',
+      studentName: 'Karthik Raja',
+      rating: 5,
+      comment: 'This is by far the best Tamil digital marketing course available. I had tried other institutes that charged ₹25,000+ but the explanations were not practical. Here, every single lesson had real client examples. After completing the SEO and Meta Ads modules, I landed my first freelance project within 3 weeks.',
+      date: '2026-09-20T10:30:00.000Z',
+      status: 'approved',
+      verifiedPurchase: true,
+      helpfulCount: 14
+    },
+    {
+      id: 'rev-102',
+      courseId: 'dm-career-pack',
+      studentId: 'std-101',
+      studentName: 'Rahul Kumar',
+      rating: 5,
+      comment: 'The live doubt sessions are genuinely useful — Sriram answers questions on real campaign problems. I was confused about campaign budgeting for Google Ads and the live session cleared everything in 20 minutes. The structured 6-month access gives plenty of time to finish everything at your own pace.',
+      date: '2026-09-10T14:00:00.000Z',
+      status: 'approved',
+      verifiedPurchase: true,
+      helpfulCount: 9
+    },
+    {
+      id: 'rev-103',
+      courseId: 'course-seo',
+      studentId: 'std-101',
+      studentName: 'Rahul Kumar',
+      rating: 5,
+      comment: 'SEO was always confusing to me — there is so much conflicting information online. This course cuts through all the noise and gives a clear, practical framework. The live case study website they use throughout the course makes every concept immediately understandable. My blog started getting indexed within days of applying the on-page techniques.',
+      date: '2026-09-05T09:15:00.000Z',
+      status: 'approved',
+      verifiedPurchase: true,
+      helpfulCount: 11
+    },
+    {
+      id: 'rev-104',
+      courseId: 'course-seo',
+      studentId: 'std-103',
+      studentName: 'Priya Dharshini',
+      rating: 4,
+      comment: 'Very solid SEO fundamentals course. The keyword research section is especially good — I learned how to find low-competition keywords for Tamil Nadu local businesses which is very specific and useful. Would love more content on link building but overall extremely worth the price.',
+      date: '2026-08-25T16:45:00.000Z',
+      status: 'approved',
+      verifiedPurchase: true,
+      helpfulCount: 7
+    },
+    {
+      id: 'rev-105',
+      courseId: 'course-gads',
+      studentId: 'std-102',
+      studentName: 'Karthik Raja',
+      rating: 5,
+      comment: 'Google Ads used to feel like a black box to me. After this course I understand exactly how Quality Score works, why some ads cost ₹2 per click and others cost ₹80, and how to structure campaigns for local service businesses. The bidding strategy module is gold — no one else explains Target CPA and Target ROAS this clearly in Tamil.',
+      date: '2026-09-15T11:30:00.000Z',
+      status: 'approved',
+      verifiedPurchase: true,
+      helpfulCount: 16
+    },
+    {
+      id: 'rev-106',
+      courseId: 'course-meta',
+      studentId: 'std-103',
+      studentName: 'Priya Dharshini',
+      rating: 5,
+      comment: 'The Meta Pixel setup section saved me so much time. I had been struggling with pixel events for weeks before this course. The retargeting framework is very logical and I implemented it for a client campaign immediately after finishing that module. ROAS went up significantly. Highly recommended for anyone running social media ads.',
+      date: '2026-09-18T13:00:00.000Z',
+      status: 'approved',
+      verifiedPurchase: true,
+      helpfulCount: 12
+    },
+    {
+      id: 'rev-107',
+      courseId: 'course-wp',
+      studentId: 'std-101',
+      studentName: 'Rahul Kumar',
+      rating: 5,
+      comment: 'Built my first WordPress website during this course and it looks completely professional. The Elementor sections are explained very clearly with real-time design tips. The plugin setup section is practical and helped me avoid common mistakes. I now offer website building as a service to local businesses.',
+      date: '2026-09-01T08:00:00.000Z',
+      status: 'approved',
+      verifiedPurchase: true,
+      helpfulCount: 8
+    }
   ]
 };
 
@@ -538,7 +756,9 @@ export const LMSProvider = ({ children }) => {
         return {
           ...initialSeed,
           ...parsed,
-          students: parsed.students || initialSeed.students
+          students: parsed.students || initialSeed.students,
+          reviews: parsed.reviews || initialSeed.reviews || [],
+          coupons: parsed.coupons || initialSeed.coupons || []
         };
       } catch (e) {
         console.error('Failed to parse localStorage data', e);
@@ -901,26 +1121,218 @@ export const LMSProvider = ({ children }) => {
     });
   };
 
-  // Coupon Verification
-  const validateCoupon = (code, amount) => {
-    if (!code) return { valid: false, message: 'Please enter a coupon code' };
-    const found = data.coupons.find(c => c.code.toUpperCase() === code.trim().toUpperCase() && c.isActive);
-    if (!found) return { valid: false, message: 'Invalid or expired coupon code' };
-    
+  // Course Cover Image Update
+  const updateCourseCoverImage = (courseId, imageBase64) => {
+    if (!currentUser || currentUser.role !== 'admin') {
+      showToast('Admin authorization required', 'error');
+      return false;
+    }
+
+    const defaultThumbnail = 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80';
+    const finalThumbnail = imageBase64 || defaultThumbnail;
+
+    setData(prev => ({
+      ...prev,
+      courses: (prev.courses || []).map(c => 
+        c.id === courseId ? { ...c, thumbnail: finalThumbnail } : c
+      )
+    }));
+
+    showToast('Course cover image updated successfully!');
+    logAuditEvent('course_cover_updated', {
+      actorId: currentUser.id,
+      actorRole: 'admin',
+      entityType: 'course',
+      entityId: courseId
+    });
+    return true;
+  };
+
+  // Coupon Verification & Validation
+  const validateCoupon = (code, cartTotal, targetItemId = 'all') => {
+    if (!code || !code.trim()) {
+      return { valid: false, message: 'Please enter a coupon code' };
+    }
+
+    const cleanCode = code.trim().toUpperCase();
+    const allCoupons = data.coupons || initialSeed.coupons || [];
+    const found = allCoupons.find(c => (c.code || '').trim().toUpperCase() === cleanCode);
+
+    if (!found) {
+      return { valid: false, message: 'Invalid coupon code' };
+    }
+
+    if (!found.isActive) {
+      return { valid: false, message: 'This coupon code is currently inactive' };
+    }
+
+    // Check Start Date
+    if (found.startDate) {
+      const start = new Date(found.startDate);
+      if (new Date() < start) {
+        return { valid: false, message: 'This coupon is not active yet' };
+      }
+    }
+
+    // Check Expiry Date
+    if (found.expiryDate) {
+      const expiry = new Date(found.expiryDate);
+      expiry.setHours(23, 59, 59, 999);
+      if (new Date() > expiry) {
+        return { valid: false, message: 'This coupon has expired' };
+      }
+    }
+
+    // Check Usage Limit
+    if (found.usageLimit && (found.usedCount || 0) >= found.usageLimit) {
+      return { valid: false, message: 'This coupon has reached its maximum usage limit' };
+    }
+
+    // Check Minimum Purchase Amount
+    if (found.minPurchaseAmount && cartTotal < found.minPurchaseAmount) {
+      return { valid: false, message: `Minimum purchase of ₹${found.minPurchaseAmount.toLocaleString()} required for coupon ${found.code}` };
+    }
+
+    // Check Item Applicability
+    if (found.applicableItemId && found.applicableItemId !== 'all' && targetItemId !== 'all' && found.applicableItemId !== targetItemId) {
+      return { valid: false, message: 'This coupon is not applicable to the selected item' };
+    }
+
+    // Calculate Discount
     let discount = 0;
     if (found.discountType === 'percentage') {
-      discount = Math.round((amount * found.discountValue) / 100);
+      discount = Math.round((cartTotal * Number(found.discountValue)) / 100);
     } else {
-      discount = found.discountValue;
+      discount = Number(found.discountValue);
     }
-    const finalPrice = Math.max(0, amount - discount);
+    discount = Math.min(discount, cartTotal);
+    const finalPrice = Math.max(0, cartTotal - discount);
+
     return {
       valid: true,
       discount,
       finalPrice,
       code: found.code,
-      message: `Coupon '${found.code}' applied successfully!`
+      message: `Coupon '${found.code}' applied! You saved ₹${discount.toLocaleString()}.`
     };
+  };
+
+  // Coupon CRUD Management Functions
+  const addCoupon = (couponData) => {
+    if (!currentUser || currentUser.role !== 'admin') {
+      showToast('Admin authorization required', 'error');
+      return;
+    }
+
+    const newCoupon = {
+      id: `coup-${Date.now()}`,
+      code: (couponData.code || '').trim().toUpperCase(),
+      description: couponData.description || '',
+      discountType: couponData.discountType || 'percentage',
+      discountValue: Number(couponData.discountValue) || 0,
+      startDate: couponData.startDate || new Date().toISOString().split('T')[0],
+      expiryDate: couponData.expiryDate || '2027-12-31',
+      usageLimit: Number(couponData.usageLimit) || 500,
+      usedCount: 0,
+      minPurchaseAmount: Number(couponData.minPurchaseAmount) || 0,
+      applicableItemId: couponData.applicableItemId || 'all',
+      isActive: couponData.isActive !== undefined ? couponData.isActive : true,
+      isVisible: couponData.isVisible !== undefined ? couponData.isVisible : true,
+      createdAt: new Date().toISOString()
+    };
+
+    setData(prev => ({
+      ...prev,
+      coupons: [newCoupon, ...(prev.coupons || [])]
+    }));
+
+    showToast(`Coupon '${newCoupon.code}' created successfully!`);
+    logAuditEvent('coupon_created', {
+      actorId: currentUser.id,
+      actorRole: 'admin',
+      entityType: 'coupon',
+      entityId: newCoupon.id,
+      metadata: { code: newCoupon.code }
+    });
+  };
+
+  const updateCoupon = (couponId, updates) => {
+    if (!currentUser || currentUser.role !== 'admin') {
+      showToast('Admin authorization required', 'error');
+      return;
+    }
+
+    setData(prev => ({
+      ...prev,
+      coupons: (prev.coupons || []).map(c => 
+        c.id === couponId ? { 
+          ...c, 
+          ...updates, 
+          code: updates.code ? updates.code.trim().toUpperCase() : c.code 
+        } : c
+      )
+    }));
+
+    showToast('Coupon updated successfully');
+    logAuditEvent('coupon_updated', {
+      actorId: currentUser.id,
+      actorRole: 'admin',
+      entityType: 'coupon',
+      entityId: couponId,
+      metadata: updates
+    });
+  };
+
+  const deleteCoupon = (couponId) => {
+    if (!currentUser || currentUser.role !== 'admin') {
+      showToast('Admin authorization required', 'error');
+      return;
+    }
+
+    setData(prev => ({
+      ...prev,
+      coupons: (prev.coupons || []).filter(c => c.id !== couponId)
+    }));
+
+    showToast('Coupon deleted');
+    logAuditEvent('coupon_deleted', {
+      actorId: currentUser.id,
+      actorRole: 'admin',
+      entityType: 'coupon',
+      entityId: couponId
+    });
+  };
+
+  const toggleCouponStatus = (couponId) => {
+    if (!currentUser || currentUser.role !== 'admin') {
+      showToast('Admin authorization required', 'error');
+      return;
+    }
+
+    setData(prev => ({
+      ...prev,
+      coupons: (prev.coupons || []).map(c => 
+        c.id === couponId ? { ...c, isActive: !c.isActive } : c
+      )
+    }));
+
+    showToast('Coupon active status updated');
+  };
+
+  const toggleCouponVisibility = (couponId) => {
+    if (!currentUser || currentUser.role !== 'admin') {
+      showToast('Admin authorization required', 'error');
+      return;
+    }
+
+    setData(prev => ({
+      ...prev,
+      coupons: (prev.coupons || []).map(c => 
+        c.id === couponId ? { ...c, isVisible: !c.isVisible } : c
+      )
+    }));
+
+    showToast('Coupon visibility status updated');
   };
 
   // Student CRUD / Status operations
@@ -1092,6 +1504,112 @@ export const LMSProvider = ({ children }) => {
     showToast('Reset system data to initial defaults');
   };
 
+  // ====================================================================
+  // REVIEWS SYSTEM
+  // ====================================================================
+
+  const addReview = ({ courseId, rating, comment }) => {
+    if (!currentUser) return;
+    const existingReview = (data.reviews || []).find(
+      r => r.courseId === courseId && r.studentId === currentUser.id
+    );
+    if (existingReview) {
+      showToast('You have already reviewed this course. Edit your existing review.');
+      return;
+    }
+    const newReview = {
+      id: `rev-${Date.now()}`,
+      courseId,
+      studentId: currentUser.id,
+      studentName: currentUser.name,
+      rating,
+      comment,
+      date: new Date().toISOString(),
+      status: 'approved',
+      verifiedPurchase: true,
+      helpfulCount: 0
+    };
+    setData(prev => {
+      const updated = { ...prev, reviews: [...(prev.reviews || []), newReview] };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return updated;
+    });
+    showToast('Review submitted successfully!');
+  };
+
+  const updateReview = (reviewId, updates) => {
+    setData(prev => {
+      const updated = {
+        ...prev,
+        reviews: (prev.reviews || []).map(r =>
+          r.id === reviewId ? { ...r, ...updates, updatedAt: new Date().toISOString() } : r
+        )
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return updated;
+    });
+    showToast('Review updated successfully!');
+  };
+
+  const addAdminReview = ({ courseId, studentName, rating, comment, isPromotional = true }) => {
+    const newReview = {
+      id: `rev-promo-${Date.now()}`,
+      courseId,
+      studentId: `admin-promo-${Date.now()}`,
+      studentName: studentName || 'Promotional Testimonial',
+      rating: Number(rating) || 5,
+      comment: comment || '',
+      date: new Date().toISOString(),
+      status: 'approved',
+      verifiedPurchase: false,
+      isPromotional: Boolean(isPromotional),
+      helpfulCount: 0
+    };
+    setData(prev => {
+      const updated = { ...prev, reviews: [...(prev.reviews || []), newReview] };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return updated;
+    });
+    showToast('Promotional review added successfully!');
+  };
+
+  const deleteReview = (reviewId) => {
+    setData(prev => {
+      const updated = { ...prev, reviews: (prev.reviews || []).filter(r => r.id !== reviewId) };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return updated;
+    });
+    showToast('Review deleted.');
+  };
+
+  const approveReview = (reviewId) => {
+    setData(prev => {
+      const updated = {
+        ...prev,
+        reviews: (prev.reviews || []).map(r =>
+          r.id === reviewId ? { ...r, status: 'approved' } : r
+        )
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return updated;
+    });
+    showToast('Review approved.');
+  };
+
+  const toggleHelpfulReview = (reviewId) => {
+    setData(prev => {
+      const updated = {
+        ...prev,
+        reviews: (prev.reviews || []).map(r =>
+          r.id === reviewId ? { ...r, helpfulCount: (r.helpfulCount || 0) + 1 } : r
+        )
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+
   return (
     <LMSContext.Provider value={{
       courses: data.courses,
@@ -1135,7 +1653,21 @@ export const LMSProvider = ({ children }) => {
       deleteFAQ,
       updateStudentStatus,
       addStudentRecord,
-      resetToDefaults
+      resetToDefaults,
+      coupons: data.coupons || initialSeed.coupons || [],
+      addCoupon,
+      updateCoupon,
+      deleteCoupon,
+      toggleCouponStatus,
+      toggleCouponVisibility,
+      updateCourseCoverImage,
+      reviews: data.reviews || [],
+      addReview,
+      updateReview,
+      addAdminReview,
+      deleteReview,
+      approveReview,
+      toggleHelpfulReview
     }}>
       {children}
 

@@ -1,7 +1,7 @@
 // ====================================================================
 // THYNK LMS — NAVIGATION BAR
 // Shows public navigation links and distinct Sign Up / Log In buttons before login.
-// Shows My Dashboard / Admin Panel link and Log Out after login.
+// Shows My Learnings / Admin Panel link and Log Out after login.
 // ====================================================================
 
 import React, { useState } from 'react';
@@ -11,6 +11,8 @@ import {
   BookOpen, Menu, X, User, LogOut, ShieldCheck, 
   Globe, Layers, Award, UserPlus, LogIn
 } from 'lucide-react';
+
+import ThynkLogo from './ThynkLogo';
 
 export default function Navbar() {
   const { currentUser, logout } = useLMS();
@@ -26,18 +28,14 @@ export default function Navbar() {
       <div className="bg-gradient-to-r from-electric-600 via-blue-700 to-brand-navy py-1.5 px-4 text-xs font-medium text-center flex items-center justify-center space-x-2">
         <span className="bg-amber-400 text-slate-900 font-extrabold px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">NEW</span>
         <span>Tamil Digital Marketing Programs Now Live • Admissions Open!</span>
-        <span className="hidden sm:inline-block border-l border-white/20 pl-2 text-sky-300">100% Practical & Affordable</span>
+        <span className="hidden sm:inline-block border-l border-white/20 pl-2 text-sky-300">100% Practical &amp; Affordable</span>
       </div>
 
       <nav className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-[30px] h-[72px] flex items-center justify-between">
         
         {/* Brand Logo */}
-        <Link to="/" className="flex items-center shrink-0 mr-6 lg:mr-[30px]">
-          <img
-            src="/thynk-logo.png"
-            alt="THYNK DIGITAL ACADEMY"
-            className="w-[135px] sm:w-[160px] lg:w-[190px] max-h-[52px] h-auto object-contain"
-          />
+        <Link to="/" className="flex items-center shrink-0 mr-6 lg:mr-[30px]" title="THYNK DIGITAL ACADEMY">
+          <ThynkLogo className="h-9 sm:h-10 lg:h-11 w-auto" />
         </Link>
 
         {/* Desktop Navigation Links */}
@@ -82,7 +80,7 @@ export default function Navbar() {
                   className="flex items-center space-x-1.5 bg-electric-600 hover:bg-electric-700 text-white font-extrabold text-xs px-4 py-2 rounded-xl shadow transition-all"
                 >
                   <BookOpen className="w-3.5 h-3.5" />
-                  <span>My Dashboard</span>
+                  <span>My Learnings</span>
                 </Link>
               )}
 
@@ -128,7 +126,7 @@ export default function Navbar() {
               to={currentUser.role === 'admin' ? '/admin' : '/dashboard'}
               className="px-3 py-1.5 rounded-lg bg-electric-600 text-white text-xs font-bold"
             >
-              {currentUser.role === 'admin' ? 'Admin' : 'Dashboard'}
+              {currentUser.role === 'admin' ? 'Admin' : 'Learnings'}
             </Link>
           )}
           <button
@@ -158,7 +156,7 @@ export default function Navbar() {
                   onClick={() => setMobileMenuOpen(false)}
                   className="block w-full text-center py-2.5 rounded-xl bg-electric-600 text-white font-bold text-xs"
                 >
-                  {currentUser.role === 'admin' ? 'Open Admin Panel' : 'My Dashboard'}
+                  {currentUser.role === 'admin' ? 'Open Admin Panel' : 'My Learnings'}
                 </Link>
                 <button
                   onClick={() => { logout(); setMobileMenuOpen(false); }}

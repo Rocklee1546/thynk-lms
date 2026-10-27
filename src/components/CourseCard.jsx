@@ -13,10 +13,17 @@ export default function CourseCard({ course, onPreviewClick }) {
 
   const handleCourseClick = (e) => {
     e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    navigate(`/course/${course.id}`);
+  };
+
+  const handleEnrollClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (!currentUser) {
-      openAuthModal(`/course/${course.id}`, 'signin');
+      openAuthModal(`/checkout?course=${course.id}`, 'signup');
     } else {
-      navigate(`/course/${course.id}`);
+      navigate(`/checkout?course=${course.id}`);
     }
   };
 
@@ -119,10 +126,10 @@ export default function CourseCard({ course, onPreviewClick }) {
 
           <button
             type="button"
-            onClick={handleCourseClick}
-            className="bg-electric-600 hover:bg-electric-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-md shadow-electric-600/20 flex items-center space-x-1.5"
+            onClick={handleEnrollClick}
+            className="bg-electric-600 hover:bg-electric-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-md shadow-electric-600/20 flex items-center space-x-1.5 cursor-pointer"
           >
-            <span>VIEW COURSE</span>
+            <span>ENROLL COURSE</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>

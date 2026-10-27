@@ -15,7 +15,10 @@ import {
 import {
   requestOtp, verifyOtp, registerNewUser,
   loginWithPassword, resetPasswordWithOtp,
-  loginWithGoogleAccount, isValidEmail, isValidMobile
+  loginWithGoogleAccount, isValidEmail, isValidIndianMobile,
+  sanitizeMobile10, completeUserProfilePhone,
+  maskPhone, maskEmail,
+  getPendingSignupSession, setPendingSignupSession, clearPendingSignupSession
 } from '../services/authService';
 import { signInWithGoogleOAuth } from '../services/supabaseClient';
 
@@ -38,12 +41,25 @@ export default function AuthPage() {
   const [flow, setFlow] = useState(initialMode);
 
   // ── SIGN UP STATE ──────────────────────────────────────
-  const [signupStep, setSignupStep] = useState('input'); // 'input' | 'otp' | 'password'
+  const [signupStep, setSignupStep] = useState('details'); // 'details' | 'password' | 'google-phone'
   const [fullName, setFullName] = useState('');
-  const [signupTarget, setSignupTarget] = useState('');
+  const [signupEmail, setSignupEmail] = useState('');
+  const [signupPhone, setSignupPhone] = useState('');
+  const [nameTouched, setNameTouched] = useState(false);
+  const [emailTouched, setEmailTouched] = useState(false);
+  const [phoneTouched, setPhoneTouched] = useState(false);
+  const [passTouched, setPassTouched] = useState(false);
+  const [confirmPassTouched, setConfirmPassTouched] = useState(false);
   const [signupOtp, setSignupOtp] = useState(['', '', '', '']);
   const [createPassword, setCreatePassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showSignupPass, setShowSignupPass] = useState(false);
+  const [showConfirmPass, setShowConfirmPass] = useState(false);
+
+  // Pending Google user needing phone number completion
+  const [pendingGoogleUser, setPendingGoogleUser] = useState(null);
+  const [googlePhone, setGooglePhone] = useState('');
+  const [googlePhoneTouched, setGooglePhoneTouched] = useState(false);
 
   // ── LOG IN STATE ───────────────────────────────────────
   const [loginTarget, setLoginTarget] = useState('');
@@ -60,11 +76,18 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showPass, setShowPass] = useState(false);
-  const [demoOtpHint, setDemoOtpHint] = useState('');
+  const [activeChallengeId, setActiveChallengeId] = useState('');
   const [resendCooldown, setResendCooldown] = useState(0);
   const [quoteIdx, setQuoteIdx] = useState(0);
 
   const otpRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
+
+  // Clear any leftover pending signup session to ensure clean direct signup
+  useEffect(() => {
+    if (initialMode === 'signup') {
+      clearPendingSignupSession();
+    }
+  }, [initialMode]);
 
   // Quote Carousel Timer
   useEffect(() => {
@@ -82,15 +105,21 @@ export default function AuthPage() {
   const resetFormState = () => {
     setError('');
     setLoading(false);
-    setDemoOtpHint('');
     setResendCooldown(0);
     setShowPass(false);
+    setShowSignupPass(false);
+    setShowConfirmPass(false);
   };
 
   const handleFlowSwitch = (newFlow) => {
     setFlow(newFlow);
-    setSignupStep('input');
+    setSignupStep('details');
     setForgotStep('input');
+    setNameTouched(false);
+    setEmailTouched(false);
+    setPhoneTouched(false);
+    setPassTouched(false);
+    setConfirmPassTouched(false);
     resetFormState();
   };
 
@@ -103,35 +132,154 @@ export default function AuthPage() {
   };
 
   // --------------------------------------------------------------------
-  // SIGN UP FLOW (NEW USER)
+  // TWO-STEP DIRECT SIGN UP FLOW (NO OTP REQUIRED)
+  // --------------------------------------------------------------------
+  
+  // Step 1: Validate Personal Details and Proceed to Step 2
+  const handleProceedToStep2 = (e) => {
+    e?.preventDefault();
+    setError('');
+    setNameTouched(true);
+    setEmailTouched(true);
+    setPhoneTouched(true);
+
+    if (!fullName || fullName.trim().length < 2) {
+      setError('Full name must contain at least 2 characters.');
+      return;
+    }
+
+    const cleanEmail = (signupEmail || '').trim().toLowerCase();
+    if (!cleanEmail || !isValidEmail(cleanEmail)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
+    const cleanPhone = sanitizeMobile10(signupPhone);
+    if (!cleanPhone || !isValidIndianMobile(cleanPhone)) {
+      setError('Enter a valid 10-digit Indian mobile number.');
+      return;
+    }
+
+    // Step 1 validated — move to Step 2 preserving all details
+    setError('');
+    setSignupStep('password');
+  };
+
+  // Step 2: Return to Step 1 preserving all details
+  const handleBackToDetails = () => {
+    setError('');
+    setSignupStep('details');
+  };
+
+  // Step 2: Validate Password & Create Account
+  const handleDirectSignup = async (e) => {
+    e?.preventDefault();
+    setError('');
+    setPassTouched(true);
+    setConfirmPassTouched(true);
+
+    // Validate Step 1 details
+    if (!fullName || fullName.trim().length < 2) {
+      setError('Full name must contain at least 2 characters.');
+      setSignupStep('details');
+      return;
+    }
+
+    const cleanEmail = (signupEmail || '').trim().toLowerCase();
+    if (!cleanEmail || !isValidEmail(cleanEmail)) {
+      setError('Please enter a valid email address.');
+      setSignupStep('details');
+      return;
+    }
+
+    const cleanPhone = sanitizeMobile10(signupPhone);
+    if (!cleanPhone || !isValidIndianMobile(cleanPhone)) {
+      setError('Enter a valid 10-digit Indian mobile number.');
+      setSignupStep('details');
+      return;
+    }
+
+    // Validate Step 2 details
+    if (!createPassword || createPassword.length < 8) {
+      setError('Password is required and must contain at least 8 characters.');
+      return;
+    }
+
+    if (createPassword !== confirmPassword) {
+      setError('Passwords do not match. Please re-enter your password.');
+      return;
+    }
+
+    setLoading(true);
+    const regRes = await registerNewUser({
+      name: fullName.trim(),
+      email: cleanEmail,
+      phone: cleanPhone,
+      phoneCountryCode: '+91',
+      password: createPassword,
+      confirmPassword,
+      whatsappConsent: true,
+      emailConsent: true
+    });
+    setLoading(false);
+
+    if (regRes.success) {
+      clearPendingSignupSession();
+      setCurrentUser(regRes.user);
+      showToast(regRes.message || 'Account created successfully! Welcome to THYNK LMS.');
+      if (redirectPath) navigate(redirectPath);
+      else navigate('/dashboard');
+    } else {
+      setError(regRes.error);
+    }
+  };
+
+  // --------------------------------------------------------------------
+  // LEGACY/REUSABLE OTP SIGN UP FLOW (Preserved for future configuration)
   // --------------------------------------------------------------------
   const handleSignupRequestOtp = async (e) => {
     e?.preventDefault();
     resetFormState();
+    setEmailTouched(true);
+    setPhoneTouched(true);
 
     if (!fullName || fullName.trim().length < 2) {
       setError('Please enter your full name.');
       return;
     }
 
-    const isEmail = signupTarget.includes('@');
-    if (isEmail && !isValidEmail(signupTarget)) {
+    const cleanEmail = signupEmail.trim().toLowerCase();
+    if (!cleanEmail || !isValidEmail(cleanEmail)) {
       setError('Please enter a valid email address.');
       return;
     }
-    if (!isEmail && !isValidMobile(signupTarget)) {
-      setError('Please enter a valid 10-digit mobile number.');
+
+    const cleanPhone = sanitizeMobile10(signupPhone);
+    if (!cleanPhone || !isValidIndianMobile(cleanPhone)) {
+      setError('Enter a valid 10-digit Indian mobile number.');
       return;
     }
 
     setLoading(true);
-    const res = await requestOtp(signupTarget, 'signup');
+    const res = await requestOtp(cleanPhone, 'signup', {
+      fullName: fullName.trim(),
+      email: cleanEmail,
+      phone: cleanPhone
+    });
     setLoading(false);
 
     if (res.success) {
+      setActiveChallengeId(res.challengeId);
+      setPendingSignupSession({
+        challengeId: res.challengeId,
+        fullName: fullName.trim(),
+        email: cleanEmail,
+        phone: cleanPhone,
+        resendAvailableAt: Date.now() + 45 * 1000,
+        expiresAt: Date.now() + 5 * 60 * 1000
+      });
       setSignupStep('otp');
-      setResendCooldown(45);
-      if (res.demoCode) setDemoOtpHint(res.demoCode);
+      setResendCooldown(res.resendCooldown || 45);
       showToast(res.message);
     } else {
       setError(res.error);
@@ -148,15 +296,18 @@ export default function AuthPage() {
       return;
     }
 
+    const cleanPhone = sanitizeMobile10(signupPhone);
+    const identifier = activeChallengeId || cleanPhone || signupEmail.trim().toLowerCase();
+
     setLoading(true);
-    const res = await verifyOtp(signupTarget, fullOtp);
+    const res = await verifyOtp(identifier, fullOtp);
     setLoading(false);
 
     if (res.success) {
       setSignupStep('password');
       showToast('OTP verified! Please create your password.');
     } else {
-      setError(res.error); // "Incorrect OTP. Please enter the correct OTP."
+      setError(res.error);
     }
   };
 
@@ -177,15 +328,19 @@ export default function AuthPage() {
     setLoading(true);
     const regRes = await registerNewUser({
       name: fullName.trim(),
-      target: signupTarget,
+      email: signupEmail.trim().toLowerCase(),
+      phone: sanitizeMobile10(signupPhone),
+      phoneCountryCode: '+91',
       password: createPassword,
       confirmPassword,
+      challengeId: activeChallengeId,
       whatsappConsent: true,
       emailConsent: true
     });
     setLoading(false);
 
     if (regRes.success) {
+      clearPendingSignupSession();
       setCurrentUser(regRes.user);
       showToast(regRes.message);
       if (redirectPath) navigate(redirectPath);
@@ -214,7 +369,7 @@ export default function AuthPage() {
     if (res.success) {
       finishLoginSuccess(res.user);
     } else {
-      setError(res.error); // "Incorrect email/mobile number or password."
+      setError(res.error);
     }
   };
 
@@ -239,8 +394,44 @@ export default function AuthPage() {
         name: gUser.user_metadata?.full_name || 'Google Student'
       });
       if (loginRes.success) {
-        finishLoginSuccess(loginRes.user);
+        if (loginRes.needsPhone) {
+          setPendingGoogleUser(loginRes.user);
+          setSignupStep('google-phone');
+          setFlow('signup');
+        } else {
+          finishLoginSuccess(loginRes.user);
+        }
+      } else {
+        setError(loginRes.error || 'Google Sign-In failed.');
       }
+    }
+  };
+
+  const handleCompleteGooglePhone = async (e) => {
+    e?.preventDefault();
+    resetFormState();
+    setGooglePhoneTouched(true);
+
+    const cleanPhone = sanitizeMobile10(googlePhone);
+    if (!isValidIndianMobile(cleanPhone)) {
+      setError('Enter a valid 10-digit Indian mobile number.');
+      return;
+    }
+
+    if (!pendingGoogleUser) {
+      setError('Session expired. Please sign in again.');
+      return;
+    }
+
+    setLoading(true);
+    const updateRes = await completeUserProfilePhone(pendingGoogleUser.id, cleanPhone);
+    setLoading(false);
+
+    if (updateRes.success) {
+      showToast('Profile completed!');
+      finishLoginSuccess(updateRes.user);
+    } else {
+      setError(updateRes.error);
     }
   };
 
@@ -262,8 +453,7 @@ export default function AuthPage() {
 
     if (res.success) {
       setForgotStep('otp');
-      setResendCooldown(45);
-      if (res.demoCode) setDemoOtpHint(res.demoCode);
+      setResendCooldown(res.resendCooldown || 45);
       showToast(res.message);
     } else {
       setError(res.error);
@@ -340,7 +530,7 @@ export default function AuthPage() {
       {/* Top Header Bar */}
       <header className="relative z-20 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-3 group">
-          <img src="/thynk-logo.png" alt="THYNK LMS" className="h-10 w-auto object-contain brightness-0 invert" />
+          <img src="/thynk-logo.svg" alt="THYNK LMS" className="h-14 w-auto object-contain" style={{ minWidth: '120px', maxWidth: '140px' }} />
         </Link>
 
         <button
@@ -447,201 +637,269 @@ export default function AuthPage() {
               </div>
             )}
 
-            {/* Demo OTP Hint Banner */}
-            {demoOtpHint && (
-              <div className="mb-4 p-3 bg-amber-50 border border-amber-300 rounded-xl text-xs text-amber-900 font-semibold flex items-center justify-between">
-                <span>Verification OTP Code:</span>
-                <span className="font-mono font-black text-base tracking-widest text-amber-950 bg-white px-2 py-0.5 rounded border border-amber-300">
-                  {demoOtpHint}
-                </span>
-              </div>
-            )}
-
             {/* ========================================================= */}
             {/* FLOW 1: SIGN UP (NEW USER)                                */}
             {/* ========================================================= */}
             {flow === 'signup' && (
               <div className="space-y-5">
                 
-                {/* STEP 1: Enter Name & Target */}
-                {signupStep === 'input' && (
-                  <form onSubmit={handleSignupRequestOtp} className="space-y-4">
-                    <div>
-                      <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900">Create New Account</h3>
-                      <p className="text-xs text-slate-500 mt-1">Enter your details to register and verify your 4-digit OTP.</p>
+                {/* ========================================================= */}
+                {/* STEP 1: PERSONAL DETAILS                                  */}
+                {/* ========================================================= */}
+                {signupStep === 'details' && (
+                  <form onSubmit={handleProceedToStep2} className="space-y-4" noValidate>
+                    {/* Step Indicator */}
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                        Step 1 of 2 — Your Details
+                      </span>
                     </div>
 
+                    <div>
+                      <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900">Create New Account</h3>
+                      <p className="text-xs text-slate-500 mt-1">Enter your details to get started.</p>
+                    </div>
+
+                    {/* 1. Full Name */}
                     <div className="space-y-1.5 pt-1">
-                      <label className="text-xs font-bold text-slate-700">Full Name</label>
+                      <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                        <span>Full Name *</span>
+                      </label>
                       <div className="relative">
                         <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                         <input
                           type="text"
                           value={fullName}
                           onChange={(e) => setFullName(e.target.value)}
+                          onBlur={() => setNameTouched(true)}
                           placeholder="e.g. Karthik Raja"
-                          className="w-full pl-10 pr-4 py-3.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"
+                          className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"
                           required
                           autoFocus
                         />
                       </div>
+                      {nameTouched && (!fullName || fullName.trim().length < 2) && (
+                        <p className="text-[11px] text-red-600 font-semibold pt-0.5">Full name must contain at least 2 characters.</p>
+                      )}
                     </div>
 
+                    {/* 2. Email Address */}
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-700">Email Address or Mobile Number</label>
+                      <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                        <span>Email Address *</span>
+                        <span className="text-[10px] text-slate-400 font-normal">Compulsory</span>
+                      </label>
                       <div className="relative">
-                        {signupTarget.includes('@') ? (
-                          <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                        ) : (
-                          <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                        )}
+                        <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                         <input
-                          type="text"
-                          value={signupTarget}
-                          onChange={(e) => setSignupTarget(e.target.value)}
-                          placeholder="e.g. name@example.com or 9876543210"
-                          className="w-full pl-10 pr-4 py-3.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"
+                          type="email"
+                          value={signupEmail}
+                          onChange={(e) => setSignupEmail(e.target.value)}
+                          onBlur={() => setEmailTouched(true)}
+                          placeholder="name@example.com"
+                          className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"
                           required
                         />
                       </div>
+                      {emailTouched && (!signupEmail.trim() || !isValidEmail(signupEmail)) && (
+                        <p className="text-[11px] text-red-600 font-semibold pt-0.5">Please enter a valid email address.</p>
+                      )}
+                    </div>
+
+                    {/* 3. Mobile Number */}
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                        <span>Mobile Number *</span>
+                        <span className="text-[10px] text-slate-400 font-normal">10 Digits (India)</span>
+                      </label>
+                      <div className="flex rounded-xl overflow-hidden border border-slate-300 bg-slate-50 focus-within:ring-2 focus-within:ring-blue-600 focus-within:bg-white focus-within:border-transparent">
+                        <div className="px-3.5 py-3 bg-slate-100 border-r border-slate-300 text-xs font-bold text-slate-700 flex items-center space-x-1 shrink-0 select-none">
+                          <span>🇮🇳 +91</span>
+                        </div>
+                        <input
+                          type="tel"
+                          inputMode="numeric"
+                          maxLength={10}
+                          value={signupPhone}
+                          onChange={(e) => setSignupPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                          onBlur={() => setPhoneTouched(true)}
+                          placeholder="9876543210"
+                          className="w-full px-4 py-3 bg-transparent text-sm font-medium text-slate-900 focus:outline-none"
+                          required
+                        />
+                      </div>
+                      {phoneTouched && (!signupPhone || signupPhone.length !== 10 || !isValidIndianMobile(signupPhone)) && (
+                        <p className="text-[11px] text-red-600 font-semibold pt-0.5">Enter a valid 10-digit Indian mobile number.</p>
+                      )}
                     </div>
 
                     <button
                       type="submit"
-                      disabled={loading || !fullName || !signupTarget}
-                      className="w-full py-3.5 bg-[#2563EB] hover:bg-blue-700 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center space-x-2 disabled:opacity-50"
+                      className="w-full py-3.5 bg-[#2563EB] hover:bg-blue-700 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center space-x-2 cursor-pointer mt-2"
+                    >
+                      <span>SET PASSWORD →</span>
+                    </button>
+                  </form>
+                )}
+
+                {/* ========================================================= */}
+                {/* STEP 2: SET PASSWORD                                      */}
+                {/* ========================================================= */}
+                {signupStep === 'password' && (
+                  <form onSubmit={handleDirectSignup} className="space-y-4" noValidate>
+                    {/* Top Navigation Bar: Back Button & Step Indicator */}
+                    <div className="flex items-center justify-between">
+                      <button
+                        type="button"
+                        onClick={handleBackToDetails}
+                        className="inline-flex items-center space-x-1.5 text-xs font-extrabold text-slate-600 hover:text-blue-600 transition-colors cursor-pointer py-1"
+                      >
+                        <ArrowLeft className="w-4 h-4" />
+                        <span>← Back to Details</span>
+                      </button>
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                        Step 2 of 2 — Set Password
+                      </span>
+                    </div>
+
+                    <div>
+                      <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900">Set Your Password</h3>
+                      <p className="text-xs text-slate-500 mt-1">Create a secure password to complete your registration.</p>
+                    </div>
+
+                    {/* Preserved Details Mini-Summary */}
+                    <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-600 flex items-center justify-between">
+                      <div className="truncate pr-2">
+                        <span className="font-bold text-slate-800">{fullName}</span> &bull; <span className="text-slate-500">{signupEmail}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleBackToDetails}
+                        className="text-[11px] font-bold text-blue-600 hover:underline shrink-0 cursor-pointer"
+                      >
+                        Edit
+                      </button>
+                    </div>
+
+                    {/* Password */}
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                        <span>Password *</span>
+                        <span className="text-[10px] text-slate-400 font-normal">Min. 8 characters</span>
+                      </label>
+                      <div className="relative">
+                        <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                        <input
+                          type={showSignupPass ? 'text' : 'password'}
+                          value={createPassword}
+                          onChange={(e) => setCreatePassword(e.target.value)}
+                          onBlur={() => setPassTouched(true)}
+                          placeholder="At least 8 characters"
+                          className="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"
+                          required
+                          autoFocus
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowSignupPass(!showSignupPass)}
+                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer"
+                          tabIndex={-1}
+                          aria-label={showSignupPass ? "Hide password" : "Show password"}
+                        >
+                          {showSignupPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                      {passTouched && (!createPassword || createPassword.length < 8) && (
+                        <p className="text-[11px] text-red-600 font-semibold pt-0.5">Password is required and must contain at least 8 characters.</p>
+                      )}
+                    </div>
+
+                    {/* Re-enter Password */}
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                        <span>Re-enter Password *</span>
+                      </label>
+                      <div className="relative">
+                        <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                        <input
+                          type={showConfirmPass ? 'text' : 'password'}
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          onBlur={() => setConfirmPassTouched(true)}
+                          placeholder="Re-enter password"
+                          className="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPass(!showConfirmPass)}
+                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer"
+                          tabIndex={-1}
+                          aria-label={showConfirmPass ? "Hide password" : "Show password"}
+                        >
+                          {showConfirmPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                      {confirmPassTouched && (createPassword !== confirmPassword) && (
+                        <p className="text-[11px] text-red-600 font-semibold pt-0.5">Passwords do not match. Please re-enter your password.</p>
+                      )}
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full py-3.5 bg-[#2563EB] hover:bg-blue-700 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center space-x-2 disabled:opacity-50 cursor-pointer mt-2"
                     >
                       {loading ? (
                         <RefreshCw className="w-4 h-4 animate-spin" />
                       ) : (
-                        <>
-                          <span>SEND 4-DIGIT OTP</span>
-                          <ArrowRight className="w-4 h-4" />
-                        </>
+                        <span>CREATE ACCOUNT</span>
                       )}
                     </button>
                   </form>
                 )}
 
-                {/* STEP 2: Verify OTP */}
-                {signupStep === 'otp' && (
-                  <form onSubmit={handleSignupVerifyOtp} className="space-y-5">
-                    <div>
-                      <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900">Enter 4-Digit OTP</h3>
-                      <p className="text-xs text-slate-500 mt-1">
-                        We sent a 4-digit code to <strong className="text-slate-800">{signupTarget}</strong>
-                      </p>
-                    </div>
-
-                    <div className="flex items-center justify-center space-x-3 py-2">
-                      {[0, 1, 2, 3].map((idx) => (
-                        <input
-                          key={idx}
-                          ref={otpRefs[idx]}
-                          type="text"
-                          inputMode="numeric"
-                          maxLength={1}
-                          value={signupOtp[idx]}
-                          onChange={(e) => handleOtpBoxChange(idx, e.target.value, signupOtp, setSignupOtp)}
-                          onKeyDown={(e) => handleOtpBoxKeyDown(idx, e, signupOtp)}
-                          className="w-14 h-16 sm:w-16 sm:h-18 text-center font-extrabold text-2xl text-slate-900 bg-slate-50 border-2 border-slate-300 rounded-2xl focus:outline-none focus:border-blue-600 focus:bg-white transition-all shadow-sm"
-                        />
-                      ))}
-                    </div>
-
-                    <div className="flex items-center justify-between text-xs">
-                      <button
-                        type="button"
-                        onClick={() => { setSignupStep('input'); resetFormState(); }}
-                        className="font-bold text-slate-500 hover:text-slate-800"
-                      >
-                        Change Details
-                      </button>
-
-                      {resendCooldown > 0 ? (
-                        <span className="text-slate-400 font-medium">
-                          Resend in <strong className="text-slate-700">{resendCooldown}s</strong>
-                        </span>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={handleSignupRequestOtp}
-                          className="font-extrabold text-[#2563EB] hover:underline"
-                        >
-                          Resend OTP
-                        </button>
-                      )}
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={loading || signupOtp.join('').length !== 4}
-                      className="w-full py-3.5 bg-[#2563EB] hover:bg-blue-700 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center space-x-2 disabled:opacity-50"
-                    >
-                      {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <span>VERIFY OTP</span>}
-                    </button>
-                  </form>
-                )}
-
-                {/* STEP 3: Create & Confirm Password */}
-                {signupStep === 'password' && (
-                  <form onSubmit={handleSignupCreateAccount} className="space-y-4">
-                    <div>
-                      <div className="inline-flex items-center space-x-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-xs font-bold mb-2">
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                        <span>OTP Verified Successfully</span>
-                      </div>
-                      <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900">Create Password</h3>
-                      <p className="text-xs text-slate-500">Set a password for your account (minimum 6 characters).</p>
+                {/* STEP: Google Phone Completion */}
+                {signupStep === 'google-phone' && (
+                  <form onSubmit={handleCompleteGooglePhone} className="space-y-4">
+                    <div className="p-4 bg-blue-50 border border-blue-200 rounded-2xl text-xs text-blue-900 space-y-1">
+                      <h4 className="text-base font-extrabold text-blue-950">Almost Done, {pendingGoogleUser?.name || 'Student'}!</h4>
+                      <p className="text-slate-600">Please provide your 10-digit Indian mobile number to complete registration.</p>
                     </div>
 
                     <div className="space-y-1.5 pt-1">
-                      <label className="text-xs font-bold text-slate-700">Create Password</label>
-                      <div className="relative">
-                        <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                        <span>Mobile Number *</span>
+                        <span className="text-[10px] text-slate-400 font-normal">10 Digits</span>
+                      </label>
+                      <div className="flex rounded-xl overflow-hidden border border-slate-300 bg-slate-50 focus-within:ring-2 focus-within:ring-blue-600 focus-within:bg-white focus-within:border-transparent">
+                        <div className="px-3.5 py-3 bg-slate-100 border-r border-slate-300 text-xs font-bold text-slate-700 flex items-center space-x-1 shrink-0 select-none">
+                          <span>🇮🇳 +91</span>
+                        </div>
                         <input
-                          type={showPass ? 'text' : 'password'}
-                          value={createPassword}
-                          onChange={(e) => setCreatePassword(e.target.value)}
-                          placeholder="Minimum 6 characters"
-                          className="w-full pl-10 pr-10 py-3.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"
+                          type="tel"
+                          inputMode="numeric"
+                          maxLength={10}
+                          value={googlePhone}
+                          onChange={(e) => setGooglePhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                          onBlur={() => setGooglePhoneTouched(true)}
+                          placeholder="9876543210"
+                          className="w-full px-4 py-3 bg-transparent text-sm font-medium text-slate-900 focus:outline-none"
                           required
                           autoFocus
                         />
-                        <button
-                          type="button"
-                          onClick={() => setShowPass(!showPass)}
-                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                        >
-                          {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                        </button>
                       </div>
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-700">Re-enter Password</label>
-                      <div className="relative">
-                        <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                        <input
-                          type={showPass ? 'text' : 'password'}
-                          value={confirmPassword}
-                          onChange={(e) => setConfirmPassword(e.target.value)}
-                          placeholder="Confirm password"
-                          className="w-full pl-10 pr-10 py-3.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"
-                          required
-                        />
-                      </div>
-                      {confirmPassword && createPassword !== confirmPassword && (
-                        <p className="text-xs text-red-600 font-semibold pt-0.5">Passwords do not match. Please enter the password again.</p>
+                      {googlePhoneTouched && (!googlePhone || googlePhone.length !== 10 || !isValidIndianMobile(googlePhone)) && (
+                        <p className="text-[11px] text-red-600 font-semibold pt-0.5">Enter a valid 10-digit Indian mobile number.</p>
                       )}
                     </div>
 
                     <button
                       type="submit"
-                      disabled={loading || createPassword.length < 6 || createPassword !== confirmPassword}
-                      className="w-full py-3.5 bg-[#2563EB] hover:bg-blue-700 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center space-x-2 disabled:opacity-50"
+                      disabled={loading || !isValidIndianMobile(googlePhone)}
+                      className="w-full py-3.5 bg-[#2563EB] hover:bg-blue-700 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center space-x-2 disabled:opacity-50 cursor-pointer"
                     >
-                      {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <span>CREATE ACCOUNT & START LEARNING</span>}
+                      {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <span>FINISH REGISTRATION</span>}
                     </button>
                   </form>
                 )}
@@ -790,6 +1048,9 @@ export default function AuthPage() {
 
                 {forgotStep === 'otp' && (
                   <form onSubmit={handleForgotVerifyOtp} className="space-y-5">
+                    <p className="text-xs text-slate-500 text-center leading-relaxed">
+                      We sent a 4-digit verification code to <strong className="text-slate-800">{forgotTarget.includes('@') ? maskEmail(forgotTarget) : `+91 ${maskPhone(forgotTarget)}`}</strong>.
+                    </p>
                     <div className="flex items-center justify-center space-x-3 py-2">
                       {[0, 1, 2, 3].map((idx) => (
                         <input

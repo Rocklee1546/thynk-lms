@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { CheckCircle2, Layers, ArrowRight, ShieldCheck, Tag } from 'lucide-react';
 import { useLMS } from '../context/LMSContext';
 
@@ -16,11 +16,8 @@ export default function ValuePackCard({ pack }) {
 
   const handleCheckoutClick = (e) => {
     e.preventDefault();
-    if (!currentUser) {
-      openAuthModal(`/checkout?combo=${pack.id}`, 'signin');
-    } else {
-      navigate(`/checkout?combo=${pack.id}`);
-    }
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    navigate(`/value-pack/${pack.id}`);
   };
 
   return (
@@ -42,9 +39,15 @@ export default function ValuePackCard({ pack }) {
         </div>
 
         {/* Name & Description */}
-        <h3 className="text-xl md:text-2xl font-extrabold tracking-tight text-white group-hover:text-sky-300 transition-colors">
-          {pack.name}
-        </h3>
+        <Link
+          to={`/value-pack/${pack.id}`}
+          onClick={() => window.scrollTo({ top: 0, behavior: 'instant' })}
+          className="block"
+        >
+          <h3 className="text-xl md:text-2xl font-extrabold tracking-tight text-white group-hover:text-sky-300 transition-colors">
+            {pack.name}
+          </h3>
+        </Link>
         <p className="text-xs text-slate-300 mt-2 leading-relaxed">
           {pack.description}
         </p>
@@ -59,14 +62,20 @@ export default function ValuePackCard({ pack }) {
           <ul className="space-y-2">
             {includedCourseObjs.length > 0 ? (
               includedCourseObjs.map(course => (
-                <li key={course.id} className="flex items-center justify-between text-xs font-semibold bg-slate-800/60 p-2.5 rounded-xl border border-slate-700/50">
-                  <div className="flex items-center space-x-2 min-w-0 pr-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span className="text-slate-200 truncate">{course.title}</span>
-                  </div>
-                  <span className="text-slate-400 text-[11px] line-through font-normal shrink-0">
-                    ₹{course.originalPrice || course.price}
-                  </span>
+                <li key={course.id}>
+                  <Link
+                    to={`/course/${course.id}`}
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'instant' })}
+                    className="flex items-center justify-between text-xs font-semibold bg-slate-800/60 hover:bg-slate-800 p-2.5 rounded-xl border border-slate-700/50 hover:border-sky-500/50 transition-colors group/item"
+                  >
+                    <div className="flex items-center space-x-2 min-w-0 pr-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span className="text-slate-200 group-hover/item:text-sky-300 truncate transition-colors">{course.title}</span>
+                    </div>
+                    <span className="text-slate-400 text-[11px] line-through font-normal shrink-0">
+                      ₹{course.originalPrice || course.price}
+                    </span>
+                  </Link>
                 </li>
               ))
             ) : (

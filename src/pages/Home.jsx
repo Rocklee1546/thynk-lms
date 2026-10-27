@@ -32,7 +32,7 @@ import {
 } from 'lucide-react';
 
 export default function Home() {
-  const { courses, valuePacks, testimonials, faqs } = useLMS();
+  const { courses, valuePacks, testimonials, faqs, currentUser, openAuthModal } = useLMS();
   const [selectedPreviewCourse, setSelectedPreviewCourse] = useState(null);
   const [openFaqId, setOpenFaqId] = useState(null);
 
@@ -62,20 +62,18 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
 
-      {/* HERO SECTION — image + text unified */}
-      <section className="relative bg-[#F8FAFC] text-slate-900 overflow-hidden pb-20 md:pb-24 border-b border-slate-200">
+      {/* HERO SECTION — 100% seamlessly integrated hero image */}
+      <section className="relative bg-white text-slate-900 overflow-hidden pb-16 md:pb-24 border-b border-slate-200">
 
-        {/* Subtle Decorative Blue Gradients */}
-        <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-electric-500/10 blur-[140px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-0 left-10 w-96 h-96 bg-sky-400/10 blur-[120px] rounded-full pointer-events-none" />
-
-        {/* Hero Image — natural aspect ratio, no cropping */}
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12">
-          <img
-            src="/hero-students.jpg"
-            alt="THYNK Digital Academy Students"
-            className="w-full h-auto max-h-[620px] object-contain object-top block"
-          />
+        {/* Clean Hero Banner Image — 100% edge-free merging into pure white landing page background */}
+        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 md:pt-10">
+          <div className="relative bg-white">
+            <img
+              src="/hero-students-clean.jpg"
+              alt="THYNK Digital Academy Students"
+              className="w-full h-auto max-h-[600px] object-contain object-center block mx-auto transition-all"
+            />
+          </div>
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-10 md:pt-14">
@@ -195,12 +193,18 @@ export default function Home() {
                         <span className="text-slate-400 text-sm line-through block">₹9,999</span>
                         <span className="text-white font-black text-3xl sm:text-4xl">₹2,999</span>
                       </div>
-                      <Link
-                        to="/course/dm-career-pack"
-                        className="bg-[#2563EB] hover:bg-blue-600 text-white font-extrabold text-base px-6 py-3.5 rounded-xl shadow-lg shadow-blue-600/30 transition-colors"
+                      <button
+                        onClick={() => {
+                          if (!currentUser) {
+                            openAuthModal('/checkout?course=dm-career-pack', 'signup');
+                          } else {
+                            window.location.href = '/checkout?course=dm-career-pack';
+                          }
+                        }}
+                        className="bg-[#2563EB] hover:bg-blue-600 text-white font-extrabold text-base px-6 py-3.5 rounded-xl shadow-lg shadow-blue-600/30 transition-colors cursor-pointer"
                       >
                         Enroll Now
-                      </Link>
+                      </button>
                     </div>
                   </div>
 

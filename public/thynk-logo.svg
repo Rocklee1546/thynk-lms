@@ -1,0 +1,13 @@
+<svg viewBox="0 0 340 82" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g fill="#FFFFFF">
+    <path d="M 8 10 H 48 V 22 H 34 V 58 H 22 V 22 H 8 Z" />
+    <path d="M 52 10 H 64 V 29 H 80 V 10 H 92 V 58 H 80 V 40 H 64 V 58 H 52 Z" />
+    <path d="M 96 10 H 110 L 122 32 L 134 10 H 148 L 129 41 V 58 H 116 V 41 Z" />
+    <path d="M 152 10 H 165 L 186 42 V 10 H 198 V 58 H 185 L 164 26 V 58 H 152 Z" />
+    <path d="M 202 10 H 215 V 30 L 235 10 H 250 L 226 31 L 253 58 H 236 L 215 36 V 58 H 202 Z" />
+    <path d="M 252 6 L 278 12 L 264 34 L 256 26 L 243 38 L 235 30 L 248 18 L 240 10 Z" />
+  </g>
+  <text x="10" y="75" fill="#FFFFFF" fontFamily="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" fontWeight="800" fontSize="14" letterSpacing="5">
+    DIGITAL ACADEMY
+  </text>
+</svg>
